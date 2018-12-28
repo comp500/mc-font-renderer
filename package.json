@@ -1,0 +1,29 @@
+{
+  "name": "mc-font-renderer",
+  "version": "1.0.0",
+  "description": "Minecraft Font Renderer for the web (canvas library)",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comp500/mc-font-renderer.git"
+  },
+  "keywords": [
+    "minecraft",
+    "canvas"
+  ],
+  "author": "comp500",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/comp500/mc-font-renderer/issues"
+  },
+  "homepage": "https://github.com/comp500/mc-font-renderer#readme",
+  "devDependencies": {
+    "typescript": "^3.2.2"
+  }
+}
