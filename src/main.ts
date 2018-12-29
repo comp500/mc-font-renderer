@@ -77,8 +77,9 @@ interface CanvasContextPrefixed extends CanvasRenderingContext2D {
  * Example:
  * 
  * 	let renderer = new FontRenderer(ctx);
- * 	renderer.loadFontImage();
- * 	renderer.drawStringFormatted("Hello!");
+ * 	renderer.loadFontImage().then(() => {
+ *    renderer.drawStringFormatted("Hello!");
+ *  });
  */
 export default class FontRenderer {
 	/** The rendering context that the text will be rendered onto. */
@@ -102,10 +103,6 @@ export default class FontRenderer {
 
 		this.fontCanvas = document.createElement("canvas");
 		this.fontCtx = this.fontCanvas.getContext("2d")! as CanvasContextPrefixed;
-		this.fontCtx.mozImageSmoothingEnabled = false;
-		this.fontCtx.webkitImageSmoothingEnabled = false;
-		this.fontCtx.msImageSmoothingEnabled = false;
-		this.fontCtx.imageSmoothingEnabled = false;
 
 		this.scratchpadCanvas = document.createElement("canvas");
 		this.scratchpadCanvas.height = fontHeight * scaleFactor;
@@ -119,9 +116,11 @@ export default class FontRenderer {
 
 	set scaleFactor(newScale: number) {
 		this.scaleFactor = newScale;
+		this.scratchpadCanvas.height = fontHeight * newScale;
 		this.scratchpadCtx.clearRect(0, 0, this.scratchpadCanvas.width, this.scratchpadCanvas.height);
 		this.currentX = newScale;
 		this.currentY = 0;
+		// TODO: reload font
 	}
 
 	private static getCharIndex(char: string): number {
@@ -163,6 +162,12 @@ export default class FontRenderer {
 				this.fontCanvas.width = font.width * this._scaleFactor;
 				this.fontCanvas.height = font.height * this._scaleFactor;
 
+				// imageSmoothingEnabled is reset after resizing
+				this.fontCtx.mozImageSmoothingEnabled = false;
+				this.fontCtx.webkitImageSmoothingEnabled = false;
+				this.fontCtx.msImageSmoothingEnabled = false;
+				this.fontCtx.imageSmoothingEnabled = false;
+
 				this.fontCtx.drawImage(font, 0, 0, font.width * this._scaleFactor, font.height * this._scaleFactor);
 				resolve();
 			}, false);
@@ -190,6 +195,7 @@ export default class FontRenderer {
 	};
 
 	private drawDecoration(style: FontStyle) {
+		this.scratchpadCtx.fillStyle = "#fff";
 		if (style.underline) {
 			this.scratchpadCtx.fillRect(0, this.scratchpadCanvas.height - this._scaleFactor, this.scratchpadCanvas.width, this._scaleFactor);
 		}
@@ -233,11 +239,10 @@ export default class FontRenderer {
 	drawStringFormatted(str: string, x = 0, y = 0, shadow = false) {
 		let currStr = "";
 		let seenFormattingChar = false;
-		let styleOrig = new FontStyle();
+		let currentStyle = new FontStyle();
 		if (shadow) {
-			styleOrig.shadow = true;
+			currentStyle.shadow = true;
 		}
-		let currentStyle = styleOrig;
 		let currX = x;
 		for (let i = 0; i < str.length; i++) {
 			if (!seenFormattingChar) {
@@ -253,7 +258,10 @@ export default class FontRenderer {
 				}
 			} else {
 				if (/[\da-f]/.test(str[i])) {
-					currentStyle = styleOrig;
+					currentStyle = new FontStyle();
+					if (shadow) {
+						currentStyle.shadow = true;
+					}
 					currentStyle.color = str[i];
 				} else {
 					switch (str[i]) {
@@ -273,7 +281,10 @@ export default class FontRenderer {
 							currentStyle.italic = true;
 							break;
 						case "r":
-							currentStyle = styleOrig;
+							currentStyle = new FontStyle();
+							if (shadow) {
+								currentStyle.shadow = true;
+							}
 							break;
 						default:
 							currStr += "\u0167" + str[i]; // Leave it

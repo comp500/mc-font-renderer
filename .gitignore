@@ -62,3 +62,6 @@ typings/
 
 # Copyrighted assets
 test/ascii.png
+
+# Compiled code
+dist/
