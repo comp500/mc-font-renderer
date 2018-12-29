@@ -82,7 +82,7 @@ interface CanvasContextPrefixed extends CanvasRenderingContext2D {
  * });
  * ```
  */
-export default class FontRenderer {
+export class FontRenderer {
 	/** The rendering context that the text will be rendered onto. */
 	context: CanvasRenderingContext2D;
 
