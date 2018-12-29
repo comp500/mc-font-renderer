@@ -64,4 +64,4 @@ typings/
 test/ascii.png
 
 # Compiled code
-dist/
+lib/

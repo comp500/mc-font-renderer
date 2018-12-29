@@ -75,11 +75,12 @@ interface CanvasContextPrefixed extends CanvasRenderingContext2D {
  * 
  * You must call [[loadFontImage]] to load the font onto the internal canvas.
  * Example:
- * 
- * 	let renderer = new FontRenderer(ctx);
- * 	renderer.loadFontImage().then(() => {
- *    renderer.drawStringFormatted("Hello!");
- *  });
+ * ```typescript
+ * let renderer = new FontRenderer(ctx);
+ * renderer.loadFontImage().then(() => {
+ * 	renderer.drawStringFormatted("Hello!");
+ * });
+ * ```
  */
 export default class FontRenderer {
 	/** The rendering context that the text will be rendered onto. */
