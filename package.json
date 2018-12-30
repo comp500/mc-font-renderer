@@ -4,13 +4,14 @@
   "description": "Minecraft Font Renderer for the web (canvas library)",
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",
+  "module": "lib/module/main.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build",
-    "build": "tsc",
+    "build": "tsc && tsc --p tsconfig.module.json && gulp",
     "docs": "typedoc --out public/ src/main.ts --mode modules --excludePrivate --excludeProtected --excludeNotExported --entryPoint \"\\\"main\"\\\""
   },
   "repository": {
@@ -29,12 +30,16 @@
   "homepage": "https://github.com/comp500/mc-font-renderer#readme",
   "devDependencies": {
     "gulp": "^4.0.0",
+    "gulp-license": "^1.1.0",
     "gulp-rename": "^1.4.0",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify-es": "^1.0.4",
-    "rollup": "^1.0.0",
     "rollup-plugin-typescript": "^1.0.0",
+    "rollup-stream": "^1.24.1",
     "tslib": "^1.9.3",
     "typedoc": "^0.13.0",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.2",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
   }
 }

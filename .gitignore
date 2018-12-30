@@ -65,3 +65,4 @@ test/ascii.png
 
 # Compiled code
 lib/
+dist/
