@@ -29,6 +29,9 @@
   "homepage": "https://github.com/comp500/mc-font-renderer#readme",
   "devDependencies": {
     "gulp": "^4.0.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-uglify-es": "^1.0.4",
+    "rollup": "^1.0.0",
     "rollup-plugin-typescript": "^1.0.0",
     "tslib": "^1.9.3",
     "typedoc": "^0.13.0",
