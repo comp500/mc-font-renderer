@@ -9,7 +9,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\" && exit 0",
     "prepare": "npm run build",
     "build": "tsc && tsc --p tsconfig.module.json && gulp",
     "docs": "typedoc --out public/ src/main.ts --mode modules --excludePrivate --excludeProtected --excludeNotExported --entryPoint \"\\\"main\"\\\""

@@ -142,7 +142,6 @@ export class FontRenderer {
 		}
 	}
 	
-	// TODO: implement formatted text getStringWidth
 	/** Get the width that a string component will take up on the canvas. Do not use this for formatted text. */
 	getStringWidth(str: string, bold: boolean): number {
 		let width = 0;
@@ -151,6 +150,55 @@ export class FontRenderer {
 			if (bold) {
 				width += this._scaleFactor;
 			}
+		}
+		return width;
+	}
+
+	/** Get the width that a formatted string will take up on the canvas. */
+	getFormattedStringWidth(str: string): number {
+		let width = 0;
+
+		// Very similar to drawStringFormatted
+		let currStr = "";
+		let seenFormattingChar = false;
+		let currentStyle = new FontStyle();
+		for (let i = 0; i < str.length; i++) {
+			if (!seenFormattingChar) {
+				if (str.charCodeAt(i) == 167) {
+					seenFormattingChar = true;
+					if (currStr.length > 0) {
+						width += this.getStringWidth(currStr, currentStyle.bold);
+						currStr = "";
+					}
+				} else {
+					currStr += str[i];
+				}
+			} else {
+				if (/[\da-f]/.test(str[i])) {
+					currentStyle = new FontStyle();
+				} else {
+					switch (str[i]) {
+						case "k":
+						case "m":
+						case "n":
+						case "o":
+							// Do nothing
+							break;
+						case "l":
+							currentStyle.bold = true;
+							break;
+						case "r":
+							currentStyle = new FontStyle();
+							break;
+						default:
+							currStr += "\u0167" + str[i]; // Leave it
+					}
+				}
+				seenFormattingChar = false;
+			}
+		}
+		if (currStr.length > 0) { // Add remainder
+			width += this.getStringWidth(currStr, currentStyle.bold);
 		}
 		return width;
 	}
@@ -303,5 +351,20 @@ export class FontRenderer {
 	drawStringFormattedShadow(str: string, x = 0, y = 0) {
 		this.drawStringFormatted(str, x+this._scaleFactor, y+this._scaleFactor, true);
 		this.drawStringFormatted(str, x, y, false);
+	}
+
+	/** Gets the width of a string in the style used for tooltips */
+	getTooltipStringWidth(str: string) {
+		return this.getFormattedStringWidth(str);
+	}
+
+	/** Gets the height of a string in the style used for tooltips */
+	getTooltipStringHeight(_str: string) {
+		return fontHeight * this._scaleFactor;
+	}
+
+	/** Draws a string in the style used for tooltips */
+	drawStringTooltip(str: string, x = 0, y = 0) {
+		this.drawStringFormattedShadow(str, x, y);
 	}
 }
